@@ -1,0 +1,9 @@
+#ifndef PASSWORD_MANAGER_VAULT_H
+#define PASSWORD_MANAGER_VAULT_H
+
+
+class Vault {
+};
+
+
+#endif //PASSWORD_MANAGER_VAULT_H
