@@ -9,14 +9,19 @@
 using namespace std;
 
 class Vault {
-private:
-    vector<PasswordEntry> entries;
-    string masterKey;
+    private:
+        vector<PasswordEntry> entries;
+        string masterKey;
 
-public:
-    Vault();
-    void unlockVault(string key);
-    void lockVault();
+    public:
+        Vault();
+        ~Vault();
+
+        void unlockVault(string key);
+        void lockVault();
+
+        void addEntry(PasswordEntry entry);
+        void showEntries();
 };
 
 
