@@ -10,7 +10,13 @@ using namespace std;
 
 class Vault {
 private:
-    vector<PasswordEntry> passwordEntries;
+    vector<PasswordEntry> entries;
+    string masterKey;
+
+public:
+    Vault();
+    void unlockVault(string key);
+    void lockVault();
 };
 
 
