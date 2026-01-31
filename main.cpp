@@ -3,3 +3,15 @@
 
 #include <fstream>
 
+using namespace std;
+
+int main() {
+    Vault vault = Vault();
+    PasswordEntry entry1 = PasswordEntry("Google", "email@poczta.com", "haslo123");
+    PasswordEntry entry2 = PasswordEntry("Facebook", "email@poczta.pl", "haslo321");
+
+    vault.addEntry(entry1);
+    vault.addEntry(entry2);
+
+    vault.showEntries();
+}

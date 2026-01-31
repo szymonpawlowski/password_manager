@@ -15,6 +15,6 @@ PasswordEntry::~PasswordEntry() {
 }
 
 void PasswordEntry::info() {
-    printf("===\nSERVICE: %s\nLOGIN: %s\nPASSWORD: %s\n===\n",
+    printf("===\nSERVICE: %s\nLOGIN: %s\nPASSWORD: %s\n",
         serviceName.c_str(), login.c_str(), password.c_str());
 }
