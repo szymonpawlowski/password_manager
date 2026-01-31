@@ -3,18 +3,22 @@
 
 #include <string>
 
+using namespace std;
 
 class PasswordEntry
 {
-private:
-    std::string serviceName;
-    std::string login;
-    std::string password;
+    private:
+        string serviceName;
+        string login;
+        string password;
 
-public:
-    PasswordEntry(std::string useFor, std::string login, std::string password);
-    ~PasswordEntry();
+    public:
+        PasswordEntry(string serviceName, string login, string password);
+        ~PasswordEntry();
+
+        void info();
+        void editEntry();
 };
 
 
-#endif //PASSWORD_MANAGER_PASSWORDENTRY_H
+#endif
