@@ -2,14 +2,14 @@
 
 #include <string>
 
-PasswordEntry::PasswordEntry(std::string useFor, std::string login, std::string password) {
-    this->useFor = useFor;
+PasswordEntry::PasswordEntry(std::string serviceName, std::string login, std::string password) {
+    this->serviceName = serviceName;
     this->login = login;
     this->password = password;
 }
 
 PasswordEntry::~PasswordEntry() {
-    this->useFor = "";
+    this->serviceName = "";
     this->login = "";
     this->password = "";
 }

@@ -7,7 +7,7 @@
 class PasswordEntry
 {
 private:
-    std::string useFor;
+    std::string serviceName;
     std::string login;
     std::string password;
 
