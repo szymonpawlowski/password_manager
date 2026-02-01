@@ -20,9 +20,8 @@ class Vault {
         void unlockVault(string key);
         void lockVault();
 
-        void addEntry(PasswordEntry entry);
-        void showEntries();
+        void addEntry(string s, string u, string l, string p);
 };
 
 
-#endif //PASSWORD_MANAGER_VAULT_H
+#endif
