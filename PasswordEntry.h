@@ -9,11 +9,12 @@ class PasswordEntry
 {
     private:
         string serviceName;
+        string username;
         string login;
         string password;
 
     public:
-        PasswordEntry(string serviceName, string login, string password);
+        PasswordEntry(string serviceName, string username, string login, string password);
         ~PasswordEntry();
 
         void info();
