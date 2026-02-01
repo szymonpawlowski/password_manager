@@ -11,3 +11,5 @@ add_executable(password_manager
         PasswordEntry.h
         Vault.cpp
         Vault.h)
+
+target_link_libraries(PasswordManager PRIVATE OpenSSL::Crypto)
