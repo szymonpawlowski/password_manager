@@ -1,17 +1,25 @@
+#include "picosha2.h"
 #include "PasswordEntry.h"
 #include "Vault.h"
 
 #include <fstream>
+#include <string>
+#include <iostream>
 
 using namespace std;
 
 int main() {
-    Vault vault = Vault();
-    PasswordEntry entry1 = PasswordEntry("Google", "jkowalski", "email@poczta.com", "haslo123");
-    PasswordEntry entry2 = PasswordEntry("Facebook", "Jan Kowalski", "email@poczta.pl", "haslo321");
+    string masterPassword;
+    string salt = "PasswordManager";
 
-    vault.addEntry(entry1);
-    vault.addEntry(entry2);
+    cout << "--- Password Manager Setup ---" << endl;
+    cout << "Set master password: ";
+    cin >> masterPassword;
 
-    vault.showEntries();
+    string toHash = masterPassword + salt;
+    string hashedPassword = picosha2::hash256_hex_string(toHash);
+
+    cout << "Hashed password: " << hashedPassword << endl;
+
+    return 0;
 }
