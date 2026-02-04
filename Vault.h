@@ -10,6 +10,7 @@ using namespace std;
 
 class Vault {
     private:
+        const string SALT = "PasswordManager4444";
         vector<PasswordEntry> entries;
         string masterKey;
 
@@ -17,7 +18,8 @@ class Vault {
         Vault();
         ~Vault();
 
-        void unlockVault(string key);
+        bool initializeVault();
+        bool unlockVault(string key);
         void lockVault();
 
         void addEntry(string s, string u, string l, string p);

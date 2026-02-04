@@ -1,5 +1,8 @@
 #include "Vault.h"
+#include "picosha2.h"
 
+#include <iostream>
+#include <string>
 #include <fstream>
 
 using namespace std;
@@ -11,8 +14,40 @@ Vault::~Vault() {
     this->masterKey = "";
 }
 
-void Vault::unlockVault(string key) {
-    // TODO: add logging into vault
+bool Vault::initializeVault() {
+    cout << "--- Password Manager Setup ---" << endl;
+    cout << "Set master password: ";
+    cin >> masterKey;
+
+    string hashKey = masterKey + SALT;
+
+    ofstream file("vault.dat");
+    if (!file.is_open()) return false;
+
+    string hashedPassword = picosha2::hash256_hex_string(hashKey);
+
+    file << hashedPassword << "\n";
+    file.close();
+
+    return true;
+}
+
+bool Vault::unlockVault(string key) {
+    ifstream file("vault.dat");
+    if (!file.is_open()) return false;
+
+    string storedHash;
+    getline(file, storedHash);
+    file.close();
+
+    string hashedPassword = picosha2::hash256_hex_string(key + SALT);
+
+    if (hashedPassword == storedHash) {
+        this->masterKey = key;
+        return true;
+    }
+
+    return false;
 }
 
 void Vault::lockVault() {

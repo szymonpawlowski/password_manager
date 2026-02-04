@@ -1,25 +1,40 @@
-#include "picosha2.h"
-#include "PasswordEntry.h"
 #include "Vault.h"
 
-#include <fstream>
 #include <string>
 #include <iostream>
+#include <filesystem>
 
 using namespace std;
 
 int main() {
-    string masterPassword;
-    string salt = "PasswordManager";
+    Vault vault;
 
-    cout << "--- Password Manager Setup ---" << endl;
-    cout << "Set master password: ";
-    cin >> masterPassword;
+    if (!filesystem::exists("vault.dat")) {
+        if (vault.initializeVault()) {
+            cout << "Registration successfull! Proceeding to log in...\n";
+        } else {
+            cout << "Error during initialization!";
+            return 1;
+        }
+    }
 
-    string toHash = masterPassword + salt;
-    string hashedPassword = picosha2::hash256_hex_string(toHash);
+    string password;
+    bool loggedIn = false;
 
-    cout << "Hashed password: " << hashedPassword << endl;
+    while (!loggedIn) {
+        cout << "--- Log in ---\n";
+        cout << "Insert password: ";
+        getline(cin, password);
+
+        if (vault.unlockVault(password)) {
+            loggedIn = true;
+            system("cls");
+            cout << "Successfully logged in!" << endl;
+        } else {
+            system("cls");
+            cout << "Incorrect password!" << endl;
+        }
+    }
 
     return 0;
 }
