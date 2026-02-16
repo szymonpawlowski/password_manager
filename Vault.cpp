@@ -55,5 +55,17 @@ void Vault::lockVault() {
 }
 
 void Vault::addEntry(string s, string u, string l, string p) {
-    this->entries.emplace_back(s, u, l, p);
+    PasswordEntry newEntry(s, u, l, p);
+    this->entries.push_back(newEntry);
+
+    ofstream file("vault.dat", ios::app);
+
+    if (file.is_open()) {
+        file << s << " | " << u << " | " << l << " | " << p << endl;
+        file.close();
+        cout << "Entry added successfully!" << endl;
+    } else {
+        cout << "Adding entry failed!" << endl;
+    }
+
 }

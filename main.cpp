@@ -39,8 +39,8 @@ int main() {
     while (choice != 4) {
         cout << "--- MAIN MENU ---" << endl;
         cout << "1. Show all passwords" << endl;
-        cout << "2. Add new password" << endl;
-        cout << "3. Remove existing password" << endl;
+        cout << "2. Add new entry" << endl;
+        cout << "3. Remove entry" << endl;
         cout << "4. Exit" << endl;
         cin >> choice;
 
@@ -48,15 +48,31 @@ int main() {
             cout << "Show all passwords (WIP)" << endl;
             // TODO: display passwords
         } else if (choice == 2) {
-            cout << "Add new password (WIP)" << endl;
-            // TODO: add new password
+            cout << "--- Adding new entry ---" << endl;
+
+            string s;
+            string u;
+            string l;
+            string p;
+
+            cout << "Enter service name: ";
+            cin >> s;
+            cout << "Enter username: ";
+            cin >> u;
+            cout << "Enter login: ";
+            cin >> l;
+            cout << "Enter password: ";
+            cin >> p;
+
+            vault.addEntry(s, u, l, p);
+
         } else if (choice == 3) {
-            cout << "Remove existing password (WIP)" << endl;
+            cout << "--- Removing existing entry --- (WIP)" << endl;
             // TODO: remove existing password
         }
     }
 
-    cout << "Vault locked" << endl;
+    cout << "Vault closed" << endl;
 
     return 0;
 }
