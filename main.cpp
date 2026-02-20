@@ -46,23 +46,20 @@ int main() {
 
         if (choice == 1) {
             cout << "Show all passwords (WIP)" << endl;
-            // TODO: display passwords
+
         } else if (choice == 2) {
             cout << "--- Adding new entry ---" << endl;
 
-            string s;
-            string u;
-            string l;
-            string p;
+            string s, u, l, p;
 
             cout << "Enter service name: ";
-            cin >> s;
+            getline(cin >> ws, s);
             cout << "Enter username: ";
-            cin >> u;
+            getline(cin >> ws, u);
             cout << "Enter login: ";
-            cin >> l;
+            getline(cin, l);
             cout << "Enter password: ";
-            cin >> p;
+            getline(cin, p);
 
             vault.addEntry(s, u, l, p);
 

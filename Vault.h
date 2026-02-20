@@ -20,8 +20,8 @@ class Vault {
 
         bool initializeVault();
         bool unlockVault(string key);
-        void lockVault();
 
+        void loadEntries();
         void addEntry(string s, string u, string l, string p);
 };
 

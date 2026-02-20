@@ -7,25 +7,31 @@
 
 using namespace std;
 
+string trim(const string& str) {
+    size_t first = str.find_first_not_of(' ');
+    if (string::npos == first) return str;
+    size_t last = str.find_last_not_of(' ');
+
+    return str.substr(first, (last - first + 1));
+}
+
 Vault::Vault() {}
 
 Vault::~Vault() {
-    this->entries.clear();
     this->masterKey = "";
+    this->entries.clear();
 }
 
 bool Vault::initializeVault() {
     cout << "--- Password Manager Setup ---" << endl;
     cout << "Set master password: ";
-    cin >> masterKey;
-
+    getline(cin >> ws, masterKey);
     string hashKey = masterKey + SALT;
 
     ofstream file("vault.dat");
     if (!file.is_open()) return false;
 
     string hashedPassword = picosha2::hash256_hex_string(hashKey);
-
     file << hashedPassword << "\n";
     file.close();
 
@@ -44,14 +50,36 @@ bool Vault::unlockVault(string key) {
 
     if (hashedPassword == storedHash) {
         this->masterKey = key;
+        loadEntries();
         return true;
     }
 
     return false;
 }
 
-void Vault::lockVault() {
-    // TODO: add logging out of vault
+void Vault::loadEntries() {
+    ifstream file("vault.dat");
+    if (!file.is_open()) return;
+
+    string line;
+    getline(file, line);
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        stringstream ss(line);
+        string s, u, l, p;
+
+        string temp;
+        if (getline(ss, temp, '|')) s = trim(temp);
+        if (getline(ss, temp, '|')) u = trim(temp);
+        if (getline(ss, temp, '|')) l = trim(temp);
+        if (getline(ss, temp))           p = trim(temp);
+
+        entries.emplace_back(s, u, l, p);
+    }
+
+    file.close();
 }
 
 void Vault::addEntry(string s, string u, string l, string p) {
