@@ -45,7 +45,7 @@ int main() {
         cin >> choice;
 
         if (choice == 1) {
-            cout << "Show all passwords (WIP)" << endl;
+            vault.showAllEntries();
 
         } else if (choice == 2) {
             cout << "--- Adding new entry ---" << endl;

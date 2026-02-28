@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -96,4 +97,21 @@ void Vault::addEntry(string s, string u, string l, string p) {
         cout << "Adding entry failed!" << endl;
     }
 
+}
+
+void Vault::removeEntry(string s) {
+    //TODO: add removing entry
+}
+
+void Vault::showAllEntries() {
+    if (entries.empty()) return;
+
+    cout << "\n" << "=== ENTRIES ===" << endl;
+    for (int i = 0; i < entries.size(); i++) {
+        cout << i+1 << ". " << entries[i].getServiceName() << "\n";
+        cout << "\t" << "- USERNAME: " << entries[i].getUsername() << "\n";
+        cout << "\t" << "- LOGIN: " << entries[i].getLogin() << "\n";
+        cout << "\t" << "- PASSWORD: " << entries[i].getPassword() << "\n";
+        cout << "\n";
+    }
 }
