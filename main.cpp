@@ -64,8 +64,11 @@ int main() {
             vault.addEntry(s, u, l, p);
 
         } else if (choice == 3) {
-            cout << "--- Removing existing entry --- (WIP)" << endl;
-            // TODO: remove existing password
+            cout << "--- Removing entry ---" << endl;
+            cout << "Choose from which service you want to delete an entry: ";
+            string serviceName;
+            getline(cin >> ws, serviceName);
+            vault.removeEntry(serviceName);
         }
     }
 

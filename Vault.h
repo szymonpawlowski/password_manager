@@ -22,6 +22,7 @@ class Vault {
         bool unlockVault(string key);
 
         void loadEntries();
+        void updateFile();
         void addEntry(string s, string u, string l, string p);
         void removeEntry(string s);
         void showAllEntries();

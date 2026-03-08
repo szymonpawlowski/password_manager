@@ -12,7 +12,7 @@ struct PasswordEntry
     string login;
     string password;
 
-    PasswordEntry(string s, string u, string l, string p)
+    PasswordEntry(const string &s, const string &u, const string &l, const string &p)
         : serviceName(s), username(u), login(l), password(p) {};
 
     string getServiceName() const { return serviceName; }

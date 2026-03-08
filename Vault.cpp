@@ -83,6 +83,28 @@ void Vault::loadEntries() {
     file.close();
 }
 
+void Vault::updateFile() {
+    ifstream inFile("vault.dat");
+    string hash;
+    getline(inFile, hash);
+    inFile.close();
+
+    ofstream outFile("vault.dat");
+    if (outFile.is_open()) {
+        outFile << hash << "\n";
+
+        for (const auto& entry : entries) {
+            outFile << entry.getServiceName() << " | "
+                    << entry.getUsername() << " | "
+                    << entry.getLogin() << " | "
+                    << entry.getPassword() << "\n";
+        }
+
+        outFile.close();
+    }
+
+}
+
 void Vault::addEntry(string s, string u, string l, string p) {
     PasswordEntry newEntry(s, u, l, p);
     this->entries.push_back(newEntry);
@@ -100,7 +122,47 @@ void Vault::addEntry(string s, string u, string l, string p) {
 }
 
 void Vault::removeEntry(string s) {
-    //TODO: add removing entry
+    vector<int> matchesIndexes;
+
+    for (int i = 0; i < entries.size(); i++) {
+        if (entries[i].getServiceName() == s) {
+            matchesIndexes.push_back(i);
+        }
+    }
+
+    if (matchesIndexes.empty()) {
+        cout << "No matches found!" << endl;
+        return;
+    }
+
+    int indexToRemove = -1;
+
+    if (matchesIndexes.size() > 0) {
+        for (int i = 0; i < matchesIndexes.size(); i++) {
+            int id = matchesIndexes[i];
+            cout << i+1 << ". " << entries[id].getServiceName() << "\n";
+            cout << "\t" << "- USERNAME: " << entries[id].getUsername() << "\n";
+            cout << "\t" << "- LOGIN: " << entries[id].getLogin() << "\n";
+            cout << "\t" << "- PASSWORD: " << entries[id].getPassword() << "\n";
+        }
+        int choice;
+        cout << "\nChoose an entry to remove: ";
+        cin >> choice;
+        indexToRemove = matchesIndexes[choice-1];
+
+    }
+
+    char confirm;
+    cout << "Are you sure you want to remove this entry? [Y/N]" << endl;
+    cin >> confirm;
+
+    if (confirm == 'y' || confirm == 'Y') {
+        entries.erase(entries.begin() + indexToRemove);
+        updateFile();
+        cout << "Entry deleted successfully!" << endl;
+    } else {
+        cout << "Deletion cancelled." << endl;
+    }
 }
 
 void Vault::showAllEntries() {
