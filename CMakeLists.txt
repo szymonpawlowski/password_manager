@@ -11,3 +11,7 @@ add_executable(password_manager
         Vault.cpp
         Vault.h
         picosha2.h)
+
+if(MINGW)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
+endif()
