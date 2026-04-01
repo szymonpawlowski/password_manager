@@ -16,6 +16,35 @@ string trim(const string& str) {
     return str.substr(first, (last - first + 1));
 }
 
+string Vault::cipher(const string& input) {
+    string output = input;
+    for (int i=0; i<input.length(); i++) {
+        output[i] = input[i] ^ masterKey[i % masterKey.length()];
+    }
+    return output;
+}
+
+string Vault::toHex(const string& input) {
+    stringstream ss;
+    ss << hex << setfill('0');
+    for (size_t i; i < input.length(); i++) {
+        ss << setw(2) << static_cast<int>(static_cast<char>(input[i]));
+    }
+    return ss.str();
+}
+
+string Vault::fromHex(const string& input) {
+    string output;
+    if (input.length() % 2 != 0) return "";
+
+    for (size_t i = 0; i < input.length(); i += 2) {
+        string byteString = input.substr(i, 2);
+        char byte = static_cast<char>(stoi(byteString, nullptr, 16));
+        output.push_back(byte);
+    }
+    return output;
+}
+
 Vault::Vault() {}
 
 Vault::~Vault() {
@@ -69,15 +98,19 @@ void Vault::loadEntries() {
         if (line.empty()) continue;
 
         stringstream ss(line);
-        string s, u, l, p;
+        string s, u, l, cipheredP;
 
         string temp;
         if (getline(ss, temp, '|')) s = trim(temp);
         if (getline(ss, temp, '|')) u = trim(temp);
         if (getline(ss, temp, '|')) l = trim(temp);
-        if (getline(ss, temp))           p = trim(temp);
 
-        entries.emplace_back(s, u, l, p);
+        string tempHex;
+        if (getline(ss, tempHex)) {
+            string encrypted = fromHex(trim(tempHex));
+            string p = cipher(encrypted);
+            entries.emplace_back(s, u, l, p);
+        }
     }
 
     file.close();
@@ -112,7 +145,7 @@ void Vault::addEntry(string s, string u, string l, string p) {
     ofstream file("vault.dat", ios::app);
 
     if (file.is_open()) {
-        file << s << " | " << u << " | " << l << " | " << p << endl;
+        file << s << " | " << u << " | " << l << " | " << toHex(cipher(p)) << endl;
         file.close();
         cout << "Entry added successfully!" << endl;
     } else {

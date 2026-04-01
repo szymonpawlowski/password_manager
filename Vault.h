@@ -14,6 +14,10 @@ class Vault {
         vector<PasswordEntry> entries;
         string masterKey;
 
+        string cipher(const string& input);
+        string toHex(const string& input);
+        string fromHex(const string& input);
+
     public:
         Vault();
         ~Vault();
