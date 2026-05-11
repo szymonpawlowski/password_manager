@@ -2,7 +2,7 @@
 Personal vault for passwords & logins.
 
 ## 📄 Description
-WIP
+Simple app for storing your logins & passwords for different services. Equipped with hashing & encrypting algorithms.
 
 ## 📌 Requirements
 WIP
