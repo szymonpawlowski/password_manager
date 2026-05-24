@@ -42,6 +42,8 @@ add_executable(password_manager
         Vault.h
         picosha2.h
         ${IMGUI_SOURCES}
+        Gui.h
+        Gui.cpp
 )
 
 find_package(OpenGL REQUIRED)

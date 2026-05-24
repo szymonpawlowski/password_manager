@@ -10,20 +10,18 @@ using namespace std;
 
 class Vault {
     private:
-        const string SALT = "PasswordManager4444";
+        string vaultName;
         vector<PasswordEntry> entries;
-        string masterKey;
-
-        string cipher(const string& input);
-        string toHex(const string& input);
-        string fromHex(const string& input);
+        string vaultKey;
 
     public:
         Vault();
         ~Vault();
 
-        bool initializeVault();
-        bool unlockVault(string key);
+        bool initializeVault(const string& vaultName, const string& vaultKey, const string& confirmVaultKey);
+        bool unlockVault(const string& vaultKey);
+
+        string getVaultName() const;
 
         void loadEntries();
         void updateFile();

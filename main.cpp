@@ -1,7 +1,8 @@
-#include "Vault.h"
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_glfw.h"
+#include "Vault.h"
+#include "Gui.h"
 
 #include <string>
 #include <iostream>
@@ -21,11 +22,6 @@ static void esc_key_callback(GLFWwindow* window, int key, int scancode, int acti
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-enum class AppState {
-    Init,
-    Login,
-    MainMenu
-};
 
 int main() {
     glfwSetErrorCallback(error_callback);
@@ -34,12 +30,29 @@ int main() {
         exit(EXIT_FAILURE);
 
 
-    GLFWwindow* window = glfwCreateWindow(960, 640, "Password Manager", nullptr, nullptr);
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+    GLFWwindow* window = glfwCreateWindow(
+        mode->width,
+        mode->height,
+        "Password Manager",
+        monitor,
+        nullptr);
+
     if (!window)
     {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+
+    Vault vault;
+    Gui gui(vault);
 
     glfwSetKeyCallback(window, esc_key_callback);   // ESC callback
 
@@ -51,6 +64,8 @@ int main() {
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.IniFilename = nullptr;
+    io.Fonts->AddFontFromFileTTF("C:/Windows/Fonts/segoeui.ttf", 22.0f);
+    io.FontGlobalScale = 1.5f;
 
     ImGui::StyleColorsDark();
 
@@ -61,15 +76,17 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
+        int displayW, displayH;
+        glfwGetFramebufferSize(window, &displayW, &displayH);
+        glViewport(0, 0, displayW, displayH);
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Password Manager");
-        ImGui::Text("PASSWORD MANAGER");
-        ImGui::End();
+        gui.render();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
