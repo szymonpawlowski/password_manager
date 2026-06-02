@@ -38,11 +38,16 @@ int main() {
     glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+    const int windowWidth = 960;
+    const int windowHeight = 640;
+
     GLFWwindow* window = glfwCreateWindow(
-        mode->width,
-        mode->height,
+        windowWidth,
+        windowHeight,
         "Password Manager",
-        monitor,
+        nullptr,
         nullptr);
 
     if (!window)
