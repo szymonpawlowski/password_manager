@@ -20,11 +20,8 @@ Gui::~Gui() {
 void Gui::render() {
     ImGuiIO& io = ImGui::GetIO();
 
-    ImVec2 windowSize(960, 640);
-    ImVec2 windowPos(
-        (io.DisplaySize.x - windowSize.x) * 0.5f,
-        (io.DisplaySize.y - windowSize.y) * 0.5f
-    );
+    ImVec2 windowSize = io.DisplaySize;
+    ImVec2 windowPos(0, 0);
 
     ImGui::SetNextWindowSize(windowSize, ImGuiCond_Always);
     ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
