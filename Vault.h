@@ -11,14 +11,21 @@ using namespace std;
 class Vault {
     private:
         string vaultName;
+        string salt;
+        string hashKey;
         vector<PasswordEntry> entries;
-        string vaultKey;
-
+        
     public:
         Vault();
         ~Vault();
 
         bool initializeVault(const string& vaultName, const string& vaultKey, const string& confirmVaultKey);
+
+        string generateSalt();
+        string hash(const string& password, const string& salt);
+
+        bool saveVaultMetadata(const string& vaultName, const string& salt, const string& hashKey);
+
         bool unlockVault(const string& vaultKey);
 
         string getVaultName() const;

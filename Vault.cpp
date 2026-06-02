@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <random>
+#include <sstream>
 
 using namespace std;
 
@@ -13,24 +15,69 @@ Vault::Vault() {}
 
 Vault::~Vault() {
     this->vaultName = "";
-    this->vaultKey = "";
-
+    this->salt = "";
+    this->hashKey = "";
     this->entries.clear();
 }
 
-bool Vault::initializeVault(const string& vaultName, const string& vaultKey, const string& confirmVaultKey) {
-    if (vaultName != "" && vaultKey != "" && confirmVaultKey == vaultKey) {
-        this->vaultName = vaultName;
-        this->vaultKey = vaultKey;
-
-        return true;
+bool Vault::initializeVault(
+    const string& vaultName,
+    const string& vaultKey, 
+    const string& confirmVaultKey
+) {
+    if (vaultName.empty() || vaultKey.empty()) {
+        return false;
     }
 
-    return false;
+    if (confirmVaultKey != vaultKey) {
+        return false;
+    }
+
+    this->vaultName = vaultName;
+    this->salt = generateSalt();
+    this->hashKey = hash(vaultKey, salt);
+
+    return saveVaultMetadata(vaultName, salt, hashKey);
+}
+
+string Vault::generateSalt() {
+    random_device rd;
+    uniform_int_distribution<int> dist(0, 255);
+
+    stringstream ss;
+
+    for (int i = 0; i < 16; i++) {
+        ss << hex << setw(2) << setfill('0') << dist(rd);
+    }
+
+    return ss.str();
+}
+
+string Vault::hash(const string& password, const string& salt) {
+    string saltedPassword = password + salt;
+    return picosha2::hash256_hex_string(saltedPassword);    // temp hashing
+}
+
+bool Vault::saveVaultMetadata(const string& vaultName, const string& salt, const string& hashKey) {
+    ofstream file("vault.json");
+
+    if (!file.is_open()) {
+        return false;
+    }
+
+    file << "{\n";
+    file << "  \"vaultName\": \"" << vaultName << "\",\n";
+    file << "  \"salt\": \"" << salt << "\",\n";
+    file << "  \"hashKey\": \"" << hashKey << "\"\n";
+    file << "}";
+
+    file.close();
+
+    return true;
 }
 
 bool Vault::unlockVault(const string& vaultKey) {
-    if (vaultKey == "haslo123") {   // TODO: replace with hashed password
+    if (hash(vaultKey, salt) == hashKey) {   // TODO: replace with hashed password
         return true;
     }
 
