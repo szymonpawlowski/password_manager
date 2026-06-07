@@ -9,9 +9,9 @@
 using namespace std;
 
 Gui::Gui(Vault& vault): vault(vault) {
-    state = filesystem::exists("vault.json") ? AppState::Login : AppState::Init;
-
-} ;
+    state = filesystem::exists("vault.json") && vault.loadVaultMetadata()
+    ? AppState::Login : AppState::Init;
+};
 
 Gui::~Gui() {
 
@@ -54,7 +54,7 @@ void Gui::renderInit() {
 
     if (ImGui::Button("Initialize Vault")) {
         if (vault.initializeVault(vaultNameInput, initVaultKeyInput, initVaultKeyConfirmInput)) {
-            state = AppState::Entries;
+            state = AppState::Login;
         } else {
             errorMessage = "Vault initialization error";
         }
@@ -67,10 +67,20 @@ void Gui::renderLogin() {
 
     if (ImGui::Button("Log in")) {
         if (vault.unlockVault(loginVaultKeyInput)) {
+            this->loginAttempts = 0;
             state = AppState::Entries;
         } else {
+            this->loginAttempts++;
             errorMessage = "Wrong password";
         }
+
+        if (this->loginAttempts >= this->maxLoginAttempts) {
+            errorMessage = "Too many login attempts. Please restart the application.";
+        }
+    }
+
+    if (!errorMessage.empty()) {
+        ImGui::TextColored(ImVec4(1.0f, 0.25f, 0.25f, 1.0f), "%s", errorMessage.c_str());
     }
 }
 

@@ -32,6 +32,9 @@ class Gui {
         char entryLoginInput[256] = {};
         char entryPasswordInput[256] = {};
 
+        int loginAttempts = 0;
+        const int maxLoginAttempts = 5;
+
         string errorMessage;
         string successMessage;
 
@@ -41,7 +44,7 @@ class Gui {
         void renderAddEntry();
         void renderRemoveEntry();
 
-        void handleLoginInput(string vaultKey);
+        void handleLoginInput(string inputVaultKey);
 
     public:
         Gui(Vault& vault);

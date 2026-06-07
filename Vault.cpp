@@ -7,8 +7,10 @@
 #include <iomanip>
 #include <random>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 using namespace std;
+using json = nlohmann::json;
 
 
 Vault::Vault() {}
@@ -21,23 +23,23 @@ Vault::~Vault() {
 }
 
 bool Vault::initializeVault(
-    const string& vaultName,
-    const string& vaultKey, 
+    const string& inputVaultName,
+    const string& inputVaultKey, 
     const string& confirmVaultKey
 ) {
-    if (vaultName.empty() || vaultKey.empty()) {
+    if (inputVaultName.empty() || inputVaultKey.empty()) {
         return false;
     }
 
-    if (confirmVaultKey != vaultKey) {
+    if (confirmVaultKey != inputVaultKey) {
         return false;
     }
 
-    this->vaultName = vaultName;
+    this->vaultName = inputVaultName;
     this->salt = generateSalt();
-    this->hashKey = hash(vaultKey, salt);
+    this->hashKey = hash(inputVaultKey, this->salt);
 
-    return saveVaultMetadata(vaultName, salt, hashKey);
+    return saveVaultMetadata(this->vaultName, this->salt, this->hashKey);
 }
 
 string Vault::generateSalt() {
@@ -58,7 +60,7 @@ string Vault::hash(const string& password, const string& salt) {
     return picosha2::hash256_hex_string(saltedPassword);    // temp hashing
 }
 
-bool Vault::saveVaultMetadata(const string& vaultName, const string& salt, const string& hashKey) {
+bool Vault::saveVaultMetadata(const string& inputVaultName, const string& inputSalt, const string& inputHashKey) {
     ofstream file("vault.json");
 
     if (!file.is_open()) {
@@ -66,9 +68,9 @@ bool Vault::saveVaultMetadata(const string& vaultName, const string& salt, const
     }
 
     file << "{\n";
-    file << "  \"vaultName\": \"" << vaultName << "\",\n";
-    file << "  \"salt\": \"" << salt << "\",\n";
-    file << "  \"hashKey\": \"" << hashKey << "\"\n";
+    file << "  \"vaultName\": \"" << inputVaultName << "\",\n";
+    file << "  \"salt\": \"" << inputSalt << "\",\n";
+    file << "  \"hashKey\": \"" << inputHashKey << "\"\n";
     file << "}";
 
     file.close();
@@ -76,12 +78,35 @@ bool Vault::saveVaultMetadata(const string& vaultName, const string& salt, const
     return true;
 }
 
-bool Vault::unlockVault(const string& vaultKey) {
-    if (hash(vaultKey, salt) == hashKey) {   // TODO: replace with hashed password
-        return true;
+bool Vault::loadVaultMetadata() {
+    ifstream file("vault.json");
+
+    if (!file.is_open()) {
+        return false;
     }
 
-    return false;
+    json vaultData;
+    file >> vaultData;
+
+    this->vaultName = vaultData["vaultName"];
+    this->salt = vaultData["salt"];
+    this->hashKey = vaultData["hashKey"];
+
+    return true;
+}
+
+bool Vault::unlockVault(const string& inputVaultKey) {
+    if (!loadVaultMetadata()) {
+        return false;
+    }
+
+    string inputHash = hash(inputVaultKey, this->salt);
+
+    return inputHash == this->hashKey;
+}
+
+string Vault::getVaultName() const {
+    return this->vaultName;
 }
 
 void Vault::loadEntries() {
@@ -104,6 +129,4 @@ void Vault::showAllEntries() {
     // renders list of all entries (?)
 }
 
-string Vault::getVaultName() const {
-    return this->vaultName;
-}
+

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 4.0.2)
 project(password_manager)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 include(FetchContent)
 
@@ -18,6 +19,13 @@ FetchContent_Declare(
         GIT_TAG 3.4
 )
 FetchContent_MakeAvailable(glfw)
+
+FetchContent_Declare(
+        json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.11.2
+)
+FetchContent_MakeAvailable(json)
 
 # imgui source
 set(IMGUI_SOURCES
@@ -52,6 +60,7 @@ target_link_libraries(
         password_manager
         glfw
         OpenGL::GL
+        nlohmann_json::nlohmann_json
 )
 
 if(MINGW)

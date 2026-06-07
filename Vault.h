@@ -19,14 +19,15 @@ class Vault {
         Vault();
         ~Vault();
 
-        bool initializeVault(const string& vaultName, const string& vaultKey, const string& confirmVaultKey);
+        bool initializeVault(const string& inputVaultName, const string& inputVaultKey, const string& confirmVaultKey);
 
         string generateSalt();
         string hash(const string& password, const string& salt);
 
-        bool saveVaultMetadata(const string& vaultName, const string& salt, const string& hashKey);
+        bool saveVaultMetadata(const string& inputVaultName, const string& inputSalt, const string& inputHashKey);
+        bool loadVaultMetadata();
 
-        bool unlockVault(const string& vaultKey);
+        bool unlockVault(const string& inputVaultKey);
 
         string getVaultName() const;
 
